@@ -21,7 +21,14 @@ test/test_list.cpp
 
 #Lib target
 add_library(AutoDocLib STATIC
-
+src/AutoDocLib.cpp
+src/FuncInfo.cpp
+src/TemplateClassDoc.cpp
+src/TemplateFuncDoc.cpp
+src/include/AutoDocLib.hpp
+src/include/FuncInfo.hpp
+src/include/TemplateClassDoc.hpp
+src/include/TemplateFuncDoc.hpp
 )
 
 #Add app-source's to test target 
@@ -46,7 +53,7 @@ AutoDocLib
 
 #Add path to heders
 include_directories(
-src/headers 
+src/include 
 gtest/googletest/include
 )
 
