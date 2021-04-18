@@ -1,4 +1,4 @@
-#include <FuncInfo.hpp>
+#include <StructsForDoc.hpp>
 
 class TemplateFuncDoc {
 public:
@@ -7,6 +7,6 @@ public:
 
     void make_documentation(string path);
 
-private:
-    FuncInfo info;
+protected:
+    InfoForDoc info;
 };

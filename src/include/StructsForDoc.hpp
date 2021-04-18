@@ -2,8 +2,13 @@
 
 using namespace std;
 
-struct FuncInfo {
+struct InfoForDoc {
     string name;
     string short_description;
     string description;
+};
+
+struct MemberInfo {
+    string name;
+    string short_description;
 };
