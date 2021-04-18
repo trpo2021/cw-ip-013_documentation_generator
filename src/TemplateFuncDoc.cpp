@@ -2,7 +2,9 @@
 
 void TemplateFuncDoc::make_documentation(string path)
 {
-    // TODO Семену, написать функцию вывода html шаблона в файл.
+    // TODO Семену, написать функцию вывода html шаблона с подставленными
+    // значениями в файл.
+    // TODO Предусмотреть очищение полей после создания документации.
 }
 
 void TemplateFuncDoc::set_func_info(
