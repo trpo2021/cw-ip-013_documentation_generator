@@ -3,18 +3,14 @@
 
 class TemplateClassDoc {
 public:
-    void set_class_info(
-            string name,
-            string short_desctiption,
-            string description); // TODO покрыть тестами
-
-    void add_method_info(
-            string name, string short_description); // TODO покрыть тестами
-
     void
-    add_var_info(string name, string short_description); // TODO покрыть тестами
+    set_class_info(string name, string short_desctiption, string description);
 
-    void make_documentation(string path);
+    void add_method_info(string name, string short_description);
+
+    void add_var_info(string name, string short_description);
+
+    void make_documentation(string path); // TODO покрыть тестами
 
 protected:
     InfoForDoc info;

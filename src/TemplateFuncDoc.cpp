@@ -1,6 +1,6 @@
 #include <TemplateFuncDoc.hpp>
 
-void TemplateFuncDoc::make_documentation(string path)
+void TemplateFuncDoc::make_documentation(string path) //покрыть тестами.
 {
     // TODO Семену, написать функцию вывода html шаблона с подставленными
     // значениями в файл.
