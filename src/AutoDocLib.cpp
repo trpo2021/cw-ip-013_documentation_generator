@@ -4,7 +4,7 @@ using namespace std;
 void auto_doc(string path)
 {
     ifstream file;
-    file.open(path, ios::binary);
+    file.open(path);
     try {
         string doc;
         char symbol;
@@ -14,8 +14,15 @@ void auto_doc(string path)
         }
         file.close();
         p2i position;
+        long unsigned int number_comment = 0;
         do {
-            position = find_comment(doc, i);
+            position = find_comment(doc, number_comment);
+            number_comment = position.second + 1;
+            if (doc.find("Class", number_comment) == number_comment
+                || doc.find("Struct", number_comment) == number_comment) {
+            } else {
+            }
+
         } while (position != p2i(-1, -1));
 
     } catch (const std::exception& e) {
