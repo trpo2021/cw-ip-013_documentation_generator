@@ -1,3 +1,4 @@
+#pragma once 
 #include <StructsForDoc.hpp>
 #include <list>
 

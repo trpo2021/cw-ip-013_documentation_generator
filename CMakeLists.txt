@@ -52,7 +52,7 @@ AutoDocLib
 
 #Add path to heders
 include_directories(
-src/include 
-gtest/googletest/include
+src/include/ 
+gtest/googletest/include/gtest
 )
 
