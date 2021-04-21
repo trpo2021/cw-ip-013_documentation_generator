@@ -1,5 +1,6 @@
 #include <AutoDocLib.hpp>
-using namespace std;
+
+namespace fs = std::filesystem;
 
 void auto_doc(string path)
 {
@@ -35,4 +36,15 @@ p2i find_comment(string& doc, int number_comment)
     int end_comment = doc.find("*/", number_comment);
 
     return p2i(start_comment, end_comment);
+}
+
+void search_header_files(list<path>& paths, string rel_path_to_folder)
+{
+    path curr_path = current_path().concat(rel_path_to_folder);
+    for (recursive_directory_iterator r_it(curr_path), end; r_it != end;
+         ++r_it) {
+        if ((r_it->path()).extension() == ".h"
+            || (r_it->path()).extension() == ".hpp")
+            paths.push_back(r_it->path());
+    }
 }
