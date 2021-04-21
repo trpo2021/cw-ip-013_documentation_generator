@@ -75,3 +75,15 @@ void search_header_files(list<path>& paths, string rel_path_to_folder)
             paths.push_back(r_it->path());
     }
 }
+
+bool is_documenting(path file_path)
+{
+    string input;
+    ifstream file(file_path);
+    if (!file.is_open())
+        return 0;
+
+    file >> input;
+
+    return input == "//#AutoDoc";
+}

@@ -17,3 +17,4 @@ p2i find_comment(string& doc, int number_comment);
 void documentation_classes(string& doc, p2i position);
 void documentation_functions(string& doc, p2i position);
 void search_header_files(list<path>& paths, string rel_path_to_folder = "");
+bool is_documenting(path file_path);
