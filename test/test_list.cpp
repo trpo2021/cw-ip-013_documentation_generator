@@ -22,3 +22,20 @@ TEST(AutoDocLib, search_header_files)
     EXPECT_TRUE(b);
     EXPECT_TRUE(c);
 }
+
+TEST(AutoDocLib, find_comment)
+{
+    p2i EXP(0, 13);
+    p2i REAL;
+    ifstream file;
+    file.open("./test/example_folder/A.h");
+
+    ASSERT_TRUE(file.is_open());
+
+    string doc;
+    getline(file, doc, '\0');
+    file.close();
+    REAL = find_comment(doc, 0);
+
+    ASSERT_EQ(EXP, REAL);
+}
