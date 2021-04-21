@@ -39,3 +39,15 @@ TEST(AutoDocLib, find_comment)
 
     ASSERT_EQ(EXP, REAL);
 }
+
+TEST(AutoDocLib, is_documenting)
+{
+    bool a = 0;
+    bool b = 0;
+
+    a = is_documenting("./test/example_folder/A.h");
+    b = is_documenting("./test/example_folder/B.hpp");
+
+    ASSERT_FALSE(a);
+    ASSERT_TRUE(b);
+}
