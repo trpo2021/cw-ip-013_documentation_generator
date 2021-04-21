@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 project(AutoDoc)
 
-add_compile_options(-Wall -Wextra)
+add_compile_options(-Wall -Wextra -std=c++17)
 
 #Build gtest
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/gtest"
