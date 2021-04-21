@@ -11,14 +11,15 @@ void auto_doc(string path)
         getline(file, doc, '\0');
         file.close();
         p2i position;
-        long unsigned int number_comment = 0;
+        long unsigned int last_com_simbol_pos = 0;
         while (1) {
-            position = find_comment(doc, number_comment);
+            position = find_comment(doc, last_com_simbol_pos);
             if (position == p2i(-1, 2))
                 break;
-            number_comment = position.second;
-            if (doc.find("Class", number_comment) == number_comment
-                || doc.find("Struct", number_comment) == number_comment) {
+            last_com_simbol_pos = position.second;
+            if (doc.find("Class", last_com_simbol_pos) == last_com_simbol_pos
+                || doc.find("Struct", last_com_simbol_pos)
+                        == last_com_simbol_pos) {
                 documentation_classes(doc, position);
             } else {
                 documentation_functions(doc, position);
@@ -33,11 +34,12 @@ void documentation_classes(string& doc, p2i position)
 {
 }
 
-p2i find_comment(string& doc, int number_comment)
+p2i find_comment(string& doc, int last_com_simbol_pos)
 {
-    int start_comment = doc.find("/*!", number_comment);
-    int end_comment = doc.find("!*/", number_comment) + 3;
-    end_comment = doc.find_first_not_of(' ', end_comment);
+    int start_comment = doc.find("/*!", last_com_simbol_pos);
+    int end_comment = doc.find("!*/", last_com_simbol_pos) + 3;
+    end_comment = doc.find_first_not_of(
+            ' ', doc.find_first_not_of('\n', end_comment));
 
     return p2i(start_comment, end_comment);
 }
