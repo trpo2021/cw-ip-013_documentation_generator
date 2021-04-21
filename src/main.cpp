@@ -1,3 +1,4 @@
+#include <AutoDocLib.hpp>
 #include <iostream>
 
 // Правила наименований:
@@ -16,7 +17,23 @@
 
 using namespace std;
 
-int main(char** argv)
+int main(int argc, char* argv[])
 {
-    cout << "hello";
+    path path_to_save;
+    if (argc > 1) {
+        path_to_save = argv[1];
+        path_to_save.concat("/AutoDoc");
+    } else {
+        path_to_save = "./AutoDoc";
+    }
+
+    list<path> files_for_docing;
+    search_header_files(files_for_docing);
+
+    for (auto it = files_for_docing.begin(); it != files_for_docing.end();
+         ++it) {
+        if (is_documenting(*it))
+            // auto_doc(*it);
+            cout << "file " << *it << " documenting" << endl;
+    }
 }
