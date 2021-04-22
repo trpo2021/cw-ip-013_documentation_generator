@@ -2,7 +2,7 @@
 
 namespace fs = std::filesystem;
 
-void auto_doc(string path)
+void auto_doc(string path, string path_for_safe)
 {
     ifstream file;
     file.open(path);
@@ -20,9 +20,9 @@ void auto_doc(string path)
             if (doc.find("class", last_com_simbol_pos) == last_com_simbol_pos
                 || doc.find("struct", last_com_simbol_pos)
                         == last_com_simbol_pos) {
-                documentation_classes(doc, position);
+                documentation_classes(doc, position, path_for_safe);
             } else {
-                documentation_functions(doc, position);
+                documentation_functions(doc, position, path_for_safe);
             }
         }
 
@@ -30,9 +30,9 @@ void auto_doc(string path)
     }
 }
 
-void documentation_classes(string& doc, p2i position)
+void documentation_classes(string& doc, p2i position, string path_for_safe)
 {
-    TemplateClassDoc func_doc;
+    TemplateClassDoc class_doc;
     string name;
     string short_desctiption;
     string description;
@@ -45,16 +45,46 @@ void documentation_classes(string& doc, p2i position)
 
     description = append_description(doc, end_short_descr);
 
+    class_doc.set_class_info(name, short_desctiption, description);
+
     int position_var = position.second;
-    while (doc.find("};", position.second) > doc.find("///", position_var)) {
+    while (doc.find("};", position.second) > doc.find("///", position_var)
+           && doc.find("///", position_var) != -1) {
         string name_var;
         string var_description;
-        int position_var = doc.find("///", position_var);
+        position_var = doc.find("///", position_var);
         int end_short_descr = doc.find('\n', position_var);
         var_description.append(
                 doc, position_var + 3, end_short_descr - position_var - 3);
-        int
+        int start_var_name = position_var;
+        for (int i = position_var - 1; doc[i] != '\n'; i--)
+            start_var_name--;
+
+        name_var.append(doc, start_var_name, position_var - start_var_name);
+
+        class_doc.add_var_info(name_var, var_description);
     }
+
+    int position_comment = position.second;
+    while (doc.find("};", position.second) > doc.find("/*!", position_comment)
+           && doc.find("/*!", position_comment) != -1) {
+        string name_meth;
+        string short_description;
+        position_comment = doc.find("///", position_comment);
+        int end_short_descr = doc.find('\n', position_comment);
+        short_description.append(
+                doc, position_var + 3, end_short_descr - position_comment - 3);
+        int start_meth_name = position_comment;
+        for (int i = position_comment - 1; doc[i] != '\n'; i--)
+            start_meth_name--;
+
+        name_meth.append(
+                doc, start_meth_name, position_comment - start_meth_name);
+
+        class_doc.add_method_info(name_meth, short_description);
+    }
+
+    class_doc.make_documentation(path_for_safe);
 }
 string append_short_description(string& doc, int position)
 {
@@ -84,7 +114,7 @@ p2i find_comment(string& doc, int last_com_simbol_pos)
     return p2i(start_comment, end_comment);
 }
 
-void documentation_functions(string& doc, p2i position)
+void documentation_functions(string& doc, p2i position, string path_for_safe)
 {
     TemplateFuncDoc func_doc;
     string name;
@@ -100,6 +130,8 @@ void documentation_functions(string& doc, p2i position)
     description = append_description(doc, end_short_descr);
 
     func_doc.set_func_info(name, short_desctiption, description);
+
+    func_doc.make_documentation(path_for_safe);
 }
 
 void search_header_files(list<path>& paths, string rel_path_to_folder)
@@ -111,4 +143,15 @@ void search_header_files(list<path>& paths, string rel_path_to_folder)
             || (r_it->path()).extension() == ".hpp")
             paths.push_back(r_it->path());
     }
+}
+bool is_documenting(path file_path)
+{
+    string input;
+    ifstream file(file_path);
+    if (!file.is_open())
+        return 0;
+
+    file >> input;
+
+    return input == "//#AutoDoc";
 }
