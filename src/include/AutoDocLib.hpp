@@ -18,3 +18,5 @@ void documentation_classes(string& doc, p2i position);
 void documentation_functions(string& doc, p2i position);
 void search_header_files(list<path>& paths, string rel_path_to_folder = "");
 bool is_documenting(path file_path);
+string append_description(string& doc, int end_short_description);
+string append_short_description(string& doc, int position);
