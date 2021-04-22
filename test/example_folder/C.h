@@ -1,4 +1,4 @@
-//#AutoDoc
+//$AutoDoc
 
 #include <ios>
 #include <string>
