@@ -1,5 +1,8 @@
 #include <TemplateFuncDoc.hpp>
 
+#include <StructsForDoc.hpp>
+
+// TODO Добавить шаблон документации в вывод.
 void TemplateFuncDoc::make_documentation(string path) //покрыть тестами.
 {
     ofstream file;

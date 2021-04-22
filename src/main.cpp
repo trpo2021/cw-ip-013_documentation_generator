@@ -1,20 +1,6 @@
 #include <AutoDocLib.hpp>
 #include <iostream>
 
-// Правила наименований:
-
-// lower_case_with_underscores: переменные, функции
-
-// UpperCamelCase: структуры, объединения, перечисления
-
-// UPPER_CASE_WITH_UNDERSCORES: макросы
-
-// Общие рекомендации:
-
-// Не создавать композированных классов
-
-// Использовать protected вместо public (Необходимо для тестирования)
-
 using namespace std;
 
 int main(int argc, char* argv[])
@@ -35,7 +21,7 @@ int main(int argc, char* argv[])
 
     // находим все заголовочные файлы
     list<path> files_for_docing;
-    search_header_files(files_for_docing);
+    write_header_file_paths(files_for_docing);
 
     //Документируем все необходимые файлы.
     for (auto it = files_for_docing.begin(); it != files_for_docing.end();
@@ -45,4 +31,6 @@ int main(int argc, char* argv[])
             cout << "file " << *it << " documenting" << endl;
         }
     }
+
+    // TODO добавить вывод файла index.html для связки всех файлов.
 }
