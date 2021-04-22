@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 project(AutoDoc)
 
-add_compile_options(-Wall -Wextra)
+add_compile_options(-Wall -Wextra -std=c++17)
 
 #Build gtest
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/gtest"
@@ -22,11 +22,10 @@ test/test_list.cpp
 #Lib target
 add_library(AutoDocLib STATIC
 src/AutoDocLib.cpp
-src/FuncInfo.cpp
 src/TemplateClassDoc.cpp
 src/TemplateFuncDoc.cpp
 src/include/AutoDocLib.hpp
-src/include/FuncInfo.hpp
+src/include/StructsForDoc.hpp
 src/include/TemplateClassDoc.hpp
 src/include/TemplateFuncDoc.hpp
 )
@@ -53,7 +52,7 @@ AutoDocLib
 
 #Add path to heders
 include_directories(
-src/include 
-gtest/googletest/include
+src/include/ 
+gtest/googletest/include/gtest
 )
 
