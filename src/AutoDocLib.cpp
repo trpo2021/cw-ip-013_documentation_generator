@@ -153,7 +153,9 @@ string get_description(string& buff, p2i border)
 p2i get_com_border(string& buff, int left_border)
 {
     int start_comment = buff.find("/*!", left_border);
-    int end_comment = buff.find("!*/", left_border) + 2;
+    int end_comment = buff.find("!*/", left_border);
+    if (end_comment != -1)
+        end_comment += 2;
     return p2i(start_comment, end_comment);
 }
 
