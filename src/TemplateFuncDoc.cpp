@@ -1,10 +1,19 @@
 #include <TemplateFuncDoc.hpp>
 
+#include <StructsForDoc.hpp>
+
+// TODO Добавить шаблон документации в вывод.
 void TemplateFuncDoc::make_documentation(string path) //покрыть тестами.
 {
-    // TODO Семену, написать функцию вывода html шаблона с подставленными
-    // значениями в файл.
-    // TODO Предусмотреть очищение полей после создания документации.
+    ofstream file;
+    file.open(path + "/Func/" + this->info.name + ".html");
+
+    file << this->info.name << " - ";
+
+    file << this->info.short_description << endl;
+
+    file << this->info.description << endl;
+    file.close();
 }
 
 void TemplateFuncDoc::set_func_info(

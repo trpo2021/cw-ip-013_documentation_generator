@@ -1,0 +1,2 @@
+//$AutoDoc
+#include <iostream>
