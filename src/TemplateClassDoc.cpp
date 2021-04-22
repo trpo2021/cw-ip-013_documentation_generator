@@ -20,6 +20,22 @@ void TemplateClassDoc::add_var_info(string name, string short_description)
 
 void TemplateClassDoc::make_documentation(string path)
 {
-    // TODO Семену, написать функцию вывода html шаблона со значениями в файл.
-    // TODO Предусмотреть очищение полей после создания документации.
+    ofstream file;
+    file.open(path + "/classes/" + this->info.name + ".html");
+
+    file << this->info.name << " - ";
+
+    file << this->info.short_description << endl;
+
+    file << this->info.description << endl;
+
+    for (auto it = this->methods_info.begin(); it != this->methods_info.end();
+         ++it) {
+        file << it->name << " - " << it->short_description << endl;
+    }
+
+    for (auto it = this->vars_info.begin(); it != this->vars_info.end(); ++it) {
+        file << it->name << " - " << it->short_description << endl;
+    }
+    file.close();
 }
