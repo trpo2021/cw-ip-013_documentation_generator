@@ -36,6 +36,9 @@ void auto_doc(string path, string save_path)
     }
 }
 
+// TODOНе документировать класс, если в его теле содержатся служебные
+// комментарии, которых там быть не должно. Бросать исключение и сохранять в
+//список имена таких классов выводить отчет об ошибках в лог.
 void documentation_classes(string& buff, p2i border, string save_path)
 {
     TemplateClassDoc class_doc;

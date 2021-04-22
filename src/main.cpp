@@ -32,5 +32,5 @@ int main(int argc, char* argv[])
         }
     }
 
-    // TODO добавить вывод файла index.html для связки всех файлов.
+    // TODOДобавить вывод файла index.html для связки всех файлов.
 }
