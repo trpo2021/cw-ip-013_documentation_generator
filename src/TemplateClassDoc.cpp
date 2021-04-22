@@ -21,7 +21,7 @@ void TemplateClassDoc::add_var_info(string name, string short_description)
 void TemplateClassDoc::make_documentation(string path)
 {
     ofstream file;
-    file.open(path + "/classes/" + this->info.name + ".html");
+    file.open(path + "/Class/" + this->info.name + ".html");
 
     file << this->info.name << " - ";
 

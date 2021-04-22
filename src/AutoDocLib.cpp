@@ -2,136 +2,180 @@
 
 namespace fs = std::filesystem;
 
-void auto_doc(string path, string path_for_safe)
+void auto_doc(string path, string save_path)
 {
     ifstream file;
-    file.open(path);
-    try {
-        string doc;
-        getline(file, doc, '\0');
-        file.close();
-        p2i position;
-        long unsigned int last_com_simbol_pos = 0;
-        while (1) {
-            position = find_comment(doc, last_com_simbol_pos);
-            if (position.first == -1)
-                break;
-            last_com_simbol_pos = position.second;
-            if (doc.find("class", last_com_simbol_pos) == last_com_simbol_pos
-                || doc.find("struct", last_com_simbol_pos)
-                        == last_com_simbol_pos) {
-                documentation_classes(doc, position, path_for_safe);
-            } else {
-                documentation_functions(doc, position, path_for_safe);
-            }
-        }
+    p2i border(0, 0);
+    string buff;
+    int temp_pos;
 
-    } catch (const std::exception& e) {
+    //Записываем файл в строку.
+    file.open(path);
+    getline(file, buff, '\0');
+    file.close();
+
+    while (true) {
+        //Находим границы очередного коментария.
+        border = find_comment(buff, border.second);
+        if (border.first == -1)
+            break;
+
+        //Находим первый символ сигнатуры сущности.
+        temp_pos = buff.find('\n', border.second) + 1;
+        temp_pos = buff.find_first_not_of(' ', temp_pos);
+
+        //Вызываем соответствующую функцию для документирования сущности.
+        if (buff.find("class", temp_pos) == temp_pos
+            || buff.find("struct", temp_pos) == temp_pos)
+            documentation_classes(buff, border, save_path);
+        else
+            documentation_functions(buff, border, save_path);
     }
 }
 
-void documentation_classes(string& doc, p2i position, string path_for_safe)
+void documentation_classes(string& buff, p2i border, string save_path)
 {
     TemplateClassDoc class_doc;
     string name;
     string short_desctiption;
     string description;
-    int end_name_pos = doc.find('{', position.second) - 1;
-    name.append(doc, position.second + 1, end_name_pos - position.second);
+    int temp_pos;
+    p2i class_border;
 
-    short_desctiption = append_short_description(doc, position.first);
+    //Находим позицию первого символа сигнатуры класса.
+    temp_pos = buff.find('\n', border.second) + 1;
+    temp_pos = buff.find_first_not_of(' ', temp_pos);
 
-    int end_short_descr = doc.find('\n', doc.find("#~", position.first)) + 1;
+    //Считываем сигнатуру функции.
+    while (buff[temp_pos] != '{') {
+        name += buff[temp_pos];
+        temp_pos++;
+    }
 
-    description = append_description(doc, end_short_descr);
+    //Считываем краткое описание
+    short_desctiption = get_short_description(buff, border);
 
+    // Cчитываеем описание
+    description = get_description(buff, border);
+
+    //Находим границы тела класса или структуры
+    class_border = find_class_border(buff, temp_pos);
+
+    //Заполняем информацию о классе
     class_doc.set_class_info(name, short_desctiption, description);
 
-    int position_var = position.second;
-    while (doc.find("};", position.second) > doc.find("///", position_var)
-           && doc.find("///", position_var) != -1) {
-        string name_var;
-        string var_description;
-        position_var = doc.find("///", position_var);
-        int end_short_descr = doc.find('\n', position_var);
-        var_description.append(
-                doc, position_var + 3, end_short_descr - position_var - 3);
-        int start_var_name = position_var;
-        for (int i = position_var - 1; doc[i] != '\n'; i--)
-            start_var_name--;
+    //Ищем все методы и добавляем информацию о них в класс документации.
+    temp_pos = buff.find("//#", class_border.first);
+    while (temp_pos < class_border.second && temp_pos != -1) {
+        name.clear();
+        short_desctiption.clear();
 
-        name_var.append(doc, start_var_name, position_var - start_var_name);
+        for (int i = temp_pos - 1; buff[i] != '\n'; i--) {
+            if (buff[i] != ' ')
+                name = buff[i] + name;
+        }
 
-        class_doc.add_var_info(name_var, var_description);
+        for (int i = temp_pos + 3; buff[i] != '\n'; i++) {
+            if (buff[i] != ' ')
+                short_desctiption += buff[i];
+        }
+
+        class_doc.add_method_info(name, short_desctiption);
+        temp_pos = buff.find("//#", temp_pos + 1);
     }
 
-    int position_comment = position.second;
-    while (doc.find("};", position.second) > doc.find("/*!", position_comment)
-           && doc.find("/*!", position_comment) != -1) {
-        string name_meth;
-        string short_description;
-        position_comment = doc.find("///", position_comment);
-        int end_short_descr = doc.find('\n', position_comment);
-        short_description.append(
-                doc, position_var + 3, end_short_descr - position_comment - 3);
-        int start_meth_name = position_comment;
-        for (int i = position_comment - 1; doc[i] != '\n'; i--)
-            start_meth_name--;
+    //Ищем все поля и добавляем информацию о них в класс документации.
+    temp_pos = buff.find("///", class_border.first);
+    while (temp_pos < class_border.second && temp_pos != -1) {
+        name.clear();
+        short_desctiption.clear();
 
-        name_meth.append(
-                doc, start_meth_name, position_comment - start_meth_name);
+        for (int i = temp_pos - 1; buff[i] != '\n'; i--) {
+            if (buff[i] != ' ')
+                name = buff[i] + name;
+        }
 
-        class_doc.add_method_info(name_meth, short_description);
+        for (int i = temp_pos + 3; buff[i] != '\n'; i++) {
+            if (buff[i] != ' ')
+                short_desctiption += buff[i];
+        }
+
+        class_doc.add_var_info(name, short_desctiption);
+        temp_pos = buff.find("///", temp_pos + 1);
     }
-
-    class_doc.make_documentation(path_for_safe);
+    class_doc.make_documentation(save_path);
 }
-string append_short_description(string& doc, int position)
+
+string get_short_description(string& doc, p2i border)
 {
-    string short_desctiption;
-    int short_descr_pos = doc.find("#~", position) + 2;
-    while (doc[short_descr_pos] != '\n') {
-        short_desctiption.push_back(doc[short_descr_pos]);
-        short_descr_pos++;
+    string short_description;
+    int short_descr_pos = doc.find("#~", border.first) + 2;
+    while (doc[short_descr_pos] != '\n' && short_descr_pos < border.second) {
+        short_description += doc[short_descr_pos++];
     }
-    return short_desctiption;
+    return short_description;
 }
-string append_description(string& doc, int end_short_description)
+
+string get_description(string& buff, p2i border)
 {
     string description;
-    int end_comment = doc.find("!*/", end_short_description) - 1;
-    description.append(
-            doc, end_short_description, end_comment - end_short_description);
+    int temp_pos = buff.find("#~", border.first);
+    temp_pos = buff.find('\n', temp_pos) + 1;
+    while (temp_pos < border.second - 2) {
+        description += buff[temp_pos++];
+    }
     return description;
 }
 
-p2i find_comment(string& doc, int last_com_simbol_pos)
+//Возвращает пару,позиции границ первого коментария (включая !*/),
+//идущего после left_border.
+p2i find_comment(string& buff, int left_border)
 {
-    int start_comment = doc.find("/*!", last_com_simbol_pos);
-    int end_comment = doc.find("!*/", last_com_simbol_pos) + 3;
-    end_comment = doc.find_first_not_of(' ', doc.find('\n', end_comment));
-
+    int start_comment = buff.find("/*!", left_border);
+    int end_comment = buff.find("!*/", left_border) + 2;
     return p2i(start_comment, end_comment);
 }
 
-void documentation_functions(string& doc, p2i position, string path_for_safe)
+p2i find_class_border(string& buff, int first_border)
+{
+    int pos = first_border + 1;
+    int count_border = 1;
+    while (count_border != 0) {
+        if (buff[pos] == '}')
+            count_border--;
+        if (buff[pos] == '{')
+            count_border++;
+        pos++;
+    }
+    return p2i(first_border, pos);
+}
+
+void documentation_functions(string& buff, p2i border, string save_path)
 {
     TemplateFuncDoc func_doc;
     string name;
     string short_desctiption;
     string description;
-    int end_name_pos = doc.find(';', position.second);
-    name.append(doc, position.second + 1, end_name_pos - position.second);
+    int temp_pos;
 
-    short_desctiption = append_short_description(doc, position.first);
+    //Находим позицию первого симфола сигнатуры функции.
+    temp_pos = buff.find('\n', border.second) + 1;
+    temp_pos = buff.find_first_not_of(' ', temp_pos);
 
-    int end_short_descr = doc.find('\n', doc.find("#~", position.first)) + 1;
+    //Считываем сигнатуру функции.
+    while (buff[temp_pos] != ';') {
+        name += buff[temp_pos++];
+    }
 
-    description = append_description(doc, end_short_descr);
+    //Считываем краткое описание
+    short_desctiption = get_short_description(buff, border);
+
+    // Cчитываеем описание
+    description = get_description(buff, border);
 
     func_doc.set_func_info(name, short_desctiption, description);
 
-    func_doc.make_documentation(path_for_safe);
+    func_doc.make_documentation(save_path);
 }
 
 void search_header_files(list<path>& paths, string rel_path_to_folder)
@@ -153,5 +197,5 @@ bool is_documenting(path file_path)
 
     file >> input;
 
-    return input == "//#AutoDoc";
+    return input == "//$AutoDoc";
 }

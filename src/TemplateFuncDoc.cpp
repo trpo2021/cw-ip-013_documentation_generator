@@ -3,7 +3,7 @@
 void TemplateFuncDoc::make_documentation(string path) //покрыть тестами.
 {
     ofstream file;
-    file.open(path + "/func/" + this->info.name + ".html");
+    file.open(path + "/Func/" + this->info.name + ".html");
 
     file << this->info.name << " - ";
 

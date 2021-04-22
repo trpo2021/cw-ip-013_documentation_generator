@@ -19,17 +19,25 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
+    //Вычисление пути для сохраниния документации.
     path path_to_save;
     if (argc > 1) {
         path_to_save = argv[1];
-        path_to_save.concat("/AutoDoc");
     } else {
-        path_to_save = "./AutoDoc";
+        path_to_save = std::filesystem::current_path();
     }
 
+    //Создаем директорию
+    std::filesystem::create_directory(path_to_save.string() + "/AutoDoc");
+    std::filesystem::create_directory(path_to_save.string() + "/AutoDoc/Class");
+    std::filesystem::create_directory(path_to_save.string() + "/AutoDoc/Func");
+    path_to_save = path_to_save.concat("/AutoDoc");
+
+    // находим все заголовочные файлы
     list<path> files_for_docing;
     search_header_files(files_for_docing);
 
+    //Документируем все необходимые файлы.
     for (auto it = files_for_docing.begin(); it != files_for_docing.end();
          ++it) {
         if (is_documenting(*it)) {
