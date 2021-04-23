@@ -7,10 +7,11 @@ int main(int argc, char* argv[])
 {
     //Вычисление пути для сохраниния документации.
     path path_to_save;
-    if (argc > 1) {
+    path path_to_template_folder;
+
+    if (argc == 3) {
         path_to_save = argv[1];
-    } else {
-        path_to_save = std::filesystem::current_path();
+        path_to_template_folder = argv[2];
     }
 
     //Создаем директорию
@@ -22,6 +23,9 @@ int main(int argc, char* argv[])
     // находим все заголовочные файлы
     list<path> files_for_docing;
     write_header_file_paths(files_for_docing);
+
+    TemplateClassDoc::path_to_template = path_to_template_folder;
+    TemplateFuncDoc::path_to_template = path_to_template_folder;
 
     //Документируем все необходимые файлы.
     for (auto it = files_for_docing.begin(); it != files_for_docing.end();

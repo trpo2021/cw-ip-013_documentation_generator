@@ -9,6 +9,10 @@ public:
 
     void make_documentation(string path); // TODO покрыть тестами
 
+    static list<string> names;
+
+    static string path_to_template;
+
 protected:
     InfoForDoc info;
 };

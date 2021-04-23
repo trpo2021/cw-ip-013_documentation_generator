@@ -1,4 +1,4 @@
-#pragma once 
+#pragma once
 #include <StructsForDoc.hpp>
 #include <list>
 
@@ -12,6 +12,10 @@ public:
     void add_var_info(string name, string short_description);
 
     void make_documentation(string path); // TODO покрыть тестами
+
+    static list<string> names;
+
+    static string path_to_template;
 
 protected:
     InfoForDoc info;
