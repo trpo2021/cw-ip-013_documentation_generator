@@ -1,11 +1,12 @@
 #include <AutoDocLib.hpp>
 
-void documentation_classes(string& buff, p2i border, string save_path);
+string documentation_classes(string& buff, p2i border, string save_path);
 
-void documentation_functions(string& buff, p2i border, string save_path);
+string documentation_functions(string& buff, p2i border, string save_path);
 
-void auto_doc(string path, string save_path)
+void auto_doc(string path, string save_path, string path_to_template)
 {
+    list<string> names;
     ifstream file;
     p2i border(0, 0);
     string buff;
@@ -30,16 +31,16 @@ void auto_doc(string path, string save_path)
         //Вызываем соответствующую функцию для документирования сущности.
         if (buff.find("class", temp_pos) == temp_pos
             || buff.find("struct", temp_pos) == temp_pos)
-            documentation_classes(buff, border, save_path);
+            names.push_back(documentation_classes(buff, border, save_path));
         else
-            documentation_functions(buff, border, save_path);
+            names.push_back(documentation_functions(buff, border, save_path));
     }
 }
 
 // TODOНе документировать класс, если в его теле содержатся служебные
 // комментарии, которых там быть не должно. Бросать исключение и сохранять в
 //список имена таких классов выводить отчет об ошибках в лог.
-void documentation_classes(string& buff, p2i border, string save_path)
+string documentation_classes(string& buff, p2i border, string save_path)
 {
     TemplateClassDoc class_doc;
     string name;
@@ -120,6 +121,7 @@ void documentation_classes(string& buff, p2i border, string save_path)
 
     //Сохраняем файл документации.
     class_doc.make_documentation(save_path);
+    return name;
 }
 
 // TODO Покрыть тестами
@@ -184,7 +186,7 @@ p2i get_class_border(string& buff, int first_border)
     return p2i(first_border, pos);
 }
 
-void documentation_functions(string& buff, p2i border, string save_path)
+string documentation_functions(string& buff, p2i border, string save_path)
 {
     TemplateFuncDoc func_doc;
     string name;
@@ -211,6 +213,8 @@ void documentation_functions(string& buff, p2i border, string save_path)
 
     //Создаем файл документации.
     func_doc.make_documentation(save_path);
+
+    return name;
 }
 
 void write_header_file_paths(list<path>& paths, string rel_path_to_folder)

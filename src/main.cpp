@@ -24,14 +24,11 @@ int main(int argc, char* argv[])
     list<path> files_for_docing;
     write_header_file_paths(files_for_docing);
 
-    TemplateClassDoc::path_to_template = path_to_template_folder;
-    TemplateFuncDoc::path_to_template = path_to_template_folder;
-
     //Документируем все необходимые файлы.
     for (auto it = files_for_docing.begin(); it != files_for_docing.end();
          ++it) {
         if (is_documenting(*it)) {
-            auto_doc(*it, path_to_save);
+            auto_doc(*it, path_to_save, path_to_template_folder);
             cout << "file " << *it << " documenting" << endl;
         }
     }

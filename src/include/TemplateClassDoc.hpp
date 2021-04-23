@@ -11,11 +11,7 @@ public:
 
     void add_var_info(string name, string short_description);
 
-    void make_documentation(string path); // TODO покрыть тестами
-
-    static list<string> names;
-
-    static string path_to_template;
+    void make_documentation(string path);
 
 protected:
     InfoForDoc info;

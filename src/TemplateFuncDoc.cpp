@@ -2,7 +2,6 @@
 
 #include <StructsForDoc.hpp>
 
-// TODO Добавить шаблон документации в вывод.
 void TemplateFuncDoc::make_documentation(string path) //покрыть тестами.
 {
     ofstream fout;
@@ -13,7 +12,7 @@ void TemplateFuncDoc::make_documentation(string path) //покрыть тест�
     std::getline(fin, buff, '\0');
     fin.close();
 
-    for (int i = 0; i < buff.size(); i++) {
+    for (int i = 0; i < (int)buff.size(); i++) {
         if (buff[i] == '#') {
             switch (buff[i + 1]) {
             case '1':
