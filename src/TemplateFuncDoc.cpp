@@ -8,11 +8,11 @@ void TemplateFuncDoc::make_documentation(string path) //покрыть тест�
     ofstream file;
     file.open(path + "/Func/" + this->info.name + ".html");
 
-    file << this->info.name << " - ";
-
-    file << this->info.short_description << endl;
-
-    file << this->info.description << endl;
+    file << "<!DOCTYPE html>" << endl;
+    file << "<html>" << endl;
+    file << "<h2>Название функции - краткое описание:<br />";
+    file << this->info.name << "-" << this->info.short_description;
+    file << "</h2>" << endl;
     file.close();
 }
 
