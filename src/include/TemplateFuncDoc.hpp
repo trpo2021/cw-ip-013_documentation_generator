@@ -1,5 +1,6 @@
 #pragma once
 #include <StructsForDoc.hpp>
+#include <string>
 
 class TemplateFuncDoc {
 public:

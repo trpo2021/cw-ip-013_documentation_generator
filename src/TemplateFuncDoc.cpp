@@ -5,15 +5,38 @@
 // TODO Добавить шаблон документации в вывод.
 void TemplateFuncDoc::make_documentation(string path) //покрыть тестами.
 {
-    ofstream file;
-    file.open(path + "/Func/" + this->info.name + ".html");
+    ofstream fout;
+    ifstream fin;
+    fout.open(path + "/Func/" + this->info.name + ".html");
+    fin.open(
+            "/home/simonbochkarev/cw-ip-013_documentation_generator/src/"
+            "template/FuncName.html");
+    std::string buff;
+    std::getline(fin, buff, '\0');
+    fin.close();
 
-    file << "<!DOCTYPE html>" << endl;
-    file << "<html>" << endl;
-    file << "<h2>Название функции - краткое описание:<br />";
-    file << this->info.name << "-" << this->info.short_description;
-    file << "</h2>" << endl;
-    file.close();
+    for (int i = 0; i < buff.size(); i++) {
+        if (buff[i] == '#') {
+            switch (buff[i + 1]) {
+            case '1':
+                fout << this->info.name;
+                break;
+            case '2':
+                fout << this->info.short_description;
+                break;
+            case '3':
+                fout << this->info.description;
+                break;
+            default:
+                throw 1;
+                break;
+            }
+            i++;
+            continue;
+        }
+        fout << buff[i];
+    }
+    fout.close();
 }
 
 void TemplateFuncDoc::set_func_info(
