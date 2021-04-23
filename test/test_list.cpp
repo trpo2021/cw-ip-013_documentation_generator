@@ -138,3 +138,22 @@ TEST(AutoDocLib, get_short_description)
     EXPECT_EQ(exp_short_description, real_short_description);
     EXPECT_EQ(exp_no_short_description, real_no_short_description);
 }
+TEST(AutoDocLib, get_description)
+{
+    // Arrange
+    p2i border(0, 31);
+    ifstream file;
+    string doc;
+    string exp_description = "full description\n";
+    string real_description;
+    file.open("./test/example_folder/get_description/F.h");
+    ASSERT_TRUE(file.is_open());
+    getline(file, doc, '\0');
+    file.close();
+
+    // Act
+    real_description = get_description(doc, border);
+
+    // Assert
+    EXPECT_EQ(exp_description, real_description);
+}

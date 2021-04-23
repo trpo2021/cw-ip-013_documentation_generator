@@ -145,12 +145,14 @@ string get_description(string& buff, p2i border)
     string description;
 
     //Поиск начала описания.
-    int temp_pos = buff.find("#~", border.first);
-    temp_pos = buff.find('\n', temp_pos) + 1;
+    int temp_pos = border.first + 4;
 
     // Cчитывание краткого описания.
-    while (temp_pos < border.second - 2)
+    while (temp_pos < border.second - 2) {
+        if ((long unsigned int)temp_pos == buff.find("#~", border.first))
+            temp_pos = buff.find('\n', temp_pos) + 1;
         description += buff[temp_pos++];
+    }
 
     return description;
 }
