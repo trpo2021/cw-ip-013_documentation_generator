@@ -165,15 +165,18 @@ p2i get_com_border(string& buff, int left_border)
 // TODO Покрыть тестами
 p2i get_class_border(string& buff, int first_border)
 {
-    int pos = first_border + 1;
-    int count_border = 1;
-    while (count_border != 0) {
+    int pos = first_border - 1;
+    int count_border = 0;
+    do {
+        if ((long unsigned int)pos > buff.size()) {
+            return p2i(-1, -1);
+        }
+        pos++;
         if (buff[pos] == '}')
             count_border--;
         if (buff[pos] == '{')
             count_border++;
-        pos++;
-    }
+    } while (count_border != 0);
     return p2i(first_border, pos);
 }
 

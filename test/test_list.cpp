@@ -93,3 +93,25 @@ TEST(AutoDocLib, is_documenting)
     EXPECT_TRUE(is_at_first_string);
     EXPECT_FALSE(is_not);
 }
+TEST(AutoDocLib, get_class_border)
+{
+    // Arrange
+    p2i exp_border_class(8, 23);
+    p2i real_border_class;
+    p2i exp_border_if_not_class(-1, -1);
+    p2i real_border_if_not_class;
+    ifstream file;
+    string doc;
+    file.open("./test/example_folder/get_class_border/I.h");
+    ASSERT_TRUE(file.is_open());
+    getline(file, doc, '\0');
+    file.close();
+
+    // Act
+    real_border_class = get_class_border(doc, 8);
+    real_border_if_not_class = get_class_border(doc, real_border_class.second);
+
+    // Assert
+    EXPECT_EQ(exp_border_class, real_border_class);
+    EXPECT_EQ(exp_border_if_not_class, real_border_if_not_class);
+}

@@ -11,10 +11,12 @@ private:
     char b[25];            /// massiv char
     long unsigned int var; /// value number 2
 public:
+    enum {};
     MyClass(/* args */); //# Konstuctor
     ~MyClass();          //# Destructor
 
     int func(); //# function
+    enum {};
 };
 
 /*!
