@@ -129,6 +129,8 @@ string get_short_description(string& buff, p2i border)
 
     //Поиск начала краткого описания.
     int short_descr_pos = buff.find("#~", border.first) + 2;
+    if (short_descr_pos == 1)
+        return "";
 
     //Считывание краткого описания.
     while (buff[short_descr_pos] != '\n' && short_descr_pos < border.second)
