@@ -78,14 +78,14 @@ void documentation_classes(string& buff, p2i border, string save_path)
 
         //Считывание имени метода.
         for (int i = temp_pos - 1; buff[i] != '\n'; i--) {
-            if (buff[i] != ' ')
-                name = buff[i] + name;
+            if (buff[i] == ' ' && buff[i + 1] == ' ')
+                continue;
+            name = buff[i] + name;
         }
 
         // Cчитывание краткого описания.
         for (int i = temp_pos + 3; buff[i] != '\n'; i++) {
-            if (buff[i] != ' ')
-                short_desctiption += buff[i];
+            short_desctiption += buff[i];
         }
 
         //Добавляем запись о методе в класс
@@ -102,14 +102,14 @@ void documentation_classes(string& buff, p2i border, string save_path)
 
         //Считывание имени поля.
         for (int i = temp_pos - 1; buff[i] != '\n'; i--) {
-            if (buff[i] != ' ')
-                name = buff[i] + name;
+            if (buff[i] == ' ' && buff[i + 1] == ' ')
+                continue;
+            name = buff[i] + name;
         }
 
         //Считывание краткого описания.
         for (int i = temp_pos + 3; buff[i] != '\n'; i++) {
-            if (buff[i] != ' ')
-                short_desctiption += buff[i];
+            short_desctiption += buff[i];
         }
 
         //Добавляем запись о поле в класс.
