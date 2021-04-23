@@ -8,9 +8,7 @@ void TemplateFuncDoc::make_documentation(string path) //покрыть тест�
     ofstream fout;
     ifstream fin;
     fout.open(path + "/Func/" + this->info.name + ".html");
-    fin.open(
-            "/home/simonbochkarev/cw-ip-013_documentation_generator/src/"
-            "template/FuncName.html");
+    fin.open("./src/template/FuncName.html");
     std::string buff;
     std::getline(fin, buff, '\0');
     fin.close();
