@@ -20,12 +20,12 @@ void TemplateClassDoc::add_var_info(string name, string short_description)
 
 // TODO Предусмотреть очищение списков после вывода в файл
 // TODO Добавить шаблон документации в вывод.
-void TemplateClassDoc::make_documentation(string path)
+void TemplateClassDoc::make_documentation(string path, string path_to_template)
 {
     ofstream fileout;
     ifstream filein;
     fileout.open(path + "/Class/" + this->info.name + ".html");
-    filein.open("./src/template/ClassName.html");
+    filein.open(path_to_template + "/ClassName.html");
 
     std::string buff;
     std::getline(filein, buff, '\0');

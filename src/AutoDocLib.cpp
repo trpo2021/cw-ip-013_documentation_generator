@@ -1,8 +1,10 @@
 #include <AutoDocLib.hpp>
 
-string documentation_classes(string& buff, p2i border, string save_path);
+string documentation_classes(
+        string& buff, p2i border, string save_path, string path_to_template);
 
-string documentation_functions(string& buff, p2i border, string save_path);
+string documentation_functions(
+        string& buff, p2i border, string save_path, string path_to_template);
 
 void auto_doc(string path, string save_path, string path_to_template)
 {
@@ -31,16 +33,19 @@ void auto_doc(string path, string save_path, string path_to_template)
         //Вызываем соответствующую функцию для документирования сущности.
         if (buff.find("class", temp_pos) == temp_pos
             || buff.find("struct", temp_pos) == temp_pos)
-            names.push_back(documentation_classes(buff, border, save_path));
+            names.push_back(documentation_classes(
+                    buff, border, save_path, path_to_template));
         else
-            names.push_back(documentation_functions(buff, border, save_path));
+            names.push_back(documentation_functions(
+                    buff, border, save_path, path_to_template));
     }
 }
 
 // TODOНе документировать класс, если в его теле содержатся служебные
 // комментарии, которых там быть не должно. Бросать исключение и сохранять в
 //список имена таких классов выводить отчет об ошибках в лог.
-string documentation_classes(string& buff, p2i border, string save_path)
+string documentation_classes(
+        string& buff, p2i border, string save_path, string path_to_temlate)
 {
     TemplateClassDoc class_doc;
     string name;
@@ -120,7 +125,7 @@ string documentation_classes(string& buff, p2i border, string save_path)
     }
 
     //Сохраняем файл документации.
-    class_doc.make_documentation(save_path);
+    class_doc.make_documentation(save_path, path_to_temlate);
     return name;
 }
 
@@ -186,7 +191,8 @@ p2i get_class_border(string& buff, int first_border)
     return p2i(first_border, pos);
 }
 
-string documentation_functions(string& buff, p2i border, string save_path)
+string documentation_functions(
+        string& buff, p2i border, string save_path, string path_to_template)
 {
     TemplateFuncDoc func_doc;
     string name;
@@ -212,7 +218,7 @@ string documentation_functions(string& buff, p2i border, string save_path)
     func_doc.set_func_info(name, short_desctiption, description);
 
     //Создаем файл документации.
-    func_doc.make_documentation(save_path);
+    func_doc.make_documentation(save_path, path_to_template);
 
     return name;
 }

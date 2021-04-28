@@ -2,12 +2,13 @@
 
 #include <StructsForDoc.hpp>
 
-void TemplateFuncDoc::make_documentation(string path) //покрыть тестами.
+void TemplateFuncDoc::make_documentation(
+        string path, string path_to_template) //покрыть тестами.
 {
     ofstream fout;
     ifstream fin;
     fout.open(path + "/Func/" + this->info.name + ".html");
-    fin.open("./src/template/FuncName.html");
+    fin.open(path_to_template + "/FuncName.html");
     std::string buff;
     std::getline(fin, buff, '\0');
     fin.close();

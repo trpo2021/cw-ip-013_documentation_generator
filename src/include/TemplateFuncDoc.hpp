@@ -9,7 +9,7 @@ public:
     void
     set_func_info(string name, string short_desctiption, string description);
 
-    void make_documentation(string path);
+    void make_documentation(string path, string path_to_template);
 
 protected:
     InfoForDoc info;

@@ -11,7 +11,7 @@ public:
 
     void add_var_info(string name, string short_description);
 
-    void make_documentation(string path);
+    void make_documentation(string path, string path_to_template);
 
 protected:
     InfoForDoc info;
