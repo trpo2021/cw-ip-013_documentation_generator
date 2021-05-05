@@ -14,6 +14,9 @@ int main(int argc, char* argv[])
         path_to_template_folder = argv[2];
     }
 
+    // TODO добавить проверку path_to_template_folder на наличие шаблонов
+    // TODO Добавить проверку на наличие /AutoDoc
+
     //Создаем директорию
     std::filesystem::create_directory(path_to_save.string() + "/AutoDoc");
     std::filesystem::create_directory(path_to_save.string() + "/AutoDoc/Class");
