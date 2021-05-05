@@ -132,7 +132,6 @@ string documentation_classes(
     return name;
 }
 
-// TODO Покрыть тестами
 string get_short_description(string& buff, p2i border)
 {
     string short_description;
@@ -149,7 +148,6 @@ string get_short_description(string& buff, p2i border)
     return short_description;
 }
 
-// TODO Покрыть тестами
 string get_description(string& buff, p2i border)
 {
     string description;
@@ -176,7 +174,6 @@ p2i get_com_border(string& buff, int left_border)
     return p2i(start_comment, end_comment);
 }
 
-// TODO Покрыть тестами
 p2i get_class_border(string& buff, int first_border)
 {
     int pos = first_border - 1;

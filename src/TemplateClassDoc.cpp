@@ -18,8 +18,6 @@ void TemplateClassDoc::add_var_info(string name, string short_description)
     this->vars_info.emplace_back(name, short_description);
 }
 
-// TODO Предусмотреть очищение списков после вывода в файл
-// TODO Добавить шаблон документации в вывод.
 void TemplateClassDoc::make_documentation(string path, string path_to_template)
 {
     ofstream fileout;
