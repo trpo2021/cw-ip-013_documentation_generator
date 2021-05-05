@@ -15,7 +15,11 @@ using namespace std::filesystem;
 typedef pair<int, int> p2i;
 
 //Создать документацию по коментариям в файле.
-void auto_doc(string path, string save_path, string path_to_template);
+void auto_doc(
+        string path,
+        string save_path,
+        string path_to_template,
+        list<string>& names);
 // TODO Предусмотреть работу в случае, если служебный комментарий содержит
 // невалидный синтаксис.
 

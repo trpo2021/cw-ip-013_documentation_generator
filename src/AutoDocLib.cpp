@@ -6,9 +6,12 @@ string documentation_classes(
 string documentation_functions(
         string& buff, p2i border, string save_path, string path_to_template);
 
-void auto_doc(string path, string save_path, string path_to_template)
+void auto_doc(
+        string path,
+        string save_path,
+        string path_to_template,
+        list<string>& names)
 {
-    list<string> names;
     ifstream file;
     p2i border(0, 0);
     string buff;

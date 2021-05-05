@@ -5,6 +5,8 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
+    list<string> names;
+
     //Вычисление пути для сохраниния документации.
     path path_to_save;
     path path_to_template_folder;
@@ -32,7 +34,7 @@ int main(int argc, char* argv[])
     for (auto it = files_for_docing.begin(); it != files_for_docing.end();
          ++it) {
         if (is_documenting(*it)) {
-            auto_doc(*it, path_to_save, path_to_template_folder);
+            auto_doc(*it, path_to_save, path_to_template_folder, names);
             cout << "file " << *it << " documenting" << endl;
         }
     }
