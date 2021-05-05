@@ -12,7 +12,8 @@ int main(int argc, char* argv[])
     if (argc == 3) {
         path_to_save = argv[1];
         path_to_template_folder = argv[2];
-    }
+    } else
+        return 1;
 
     // TODO добавить проверку path_to_template_folder на наличие шаблонов
     // TODO Добавить проверку на наличие /AutoDoc
