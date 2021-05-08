@@ -11,3 +11,4 @@ char get_simbol(int a);
 /*!
 
 !*/
+char* get_hello();

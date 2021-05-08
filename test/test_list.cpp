@@ -93,3 +93,67 @@ TEST(AutoDocLib, is_documenting)
     EXPECT_TRUE(is_at_first_string);
     EXPECT_FALSE(is_not);
 }
+TEST(AutoDocLib, get_class_border)
+{
+    // Arrange
+    p2i exp_border_class(8, 23);
+    p2i real_border_class;
+    p2i exp_border_if_not_class(-1, -1);
+    p2i real_border_if_not_class;
+    ifstream file;
+    string doc;
+    file.open("./test/example_folder/get_class_border/I.h");
+    ASSERT_TRUE(file.is_open());
+    getline(file, doc, '\0');
+    file.close();
+
+    // Act
+    real_border_class = get_class_border(doc, 8);
+    real_border_if_not_class = get_class_border(doc, real_border_class.second);
+
+    // Assert
+    EXPECT_EQ(exp_border_class, real_border_class);
+    EXPECT_EQ(exp_border_if_not_class, real_border_if_not_class);
+}
+TEST(AutoDocLib, get_short_description)
+{
+    // Arrange
+    p2i border(0, 31);
+    p2i wrong_border(32, 35);
+    ifstream file;
+    string doc;
+    string exp_short_description = "Short";
+    string real_short_description;
+    string exp_no_short_description = "";
+    string real_no_short_description;
+    file.open("./test/example_folder/get_description/F.h");
+    ASSERT_TRUE(file.is_open());
+    getline(file, doc, '\0');
+    file.close();
+
+    // Act
+    real_short_description = get_short_description(doc, border);
+    real_no_short_description = get_short_description(doc, wrong_border);
+    // Assert
+    EXPECT_EQ(exp_short_description, real_short_description);
+    EXPECT_EQ(exp_no_short_description, real_no_short_description);
+}
+TEST(AutoDocLib, get_description)
+{
+    // Arrange
+    p2i border(0, 31);
+    ifstream file;
+    string doc;
+    string exp_description = "full description\n";
+    string real_description;
+    file.open("./test/example_folder/get_description/F.h");
+    ASSERT_TRUE(file.is_open());
+    getline(file, doc, '\0');
+    file.close();
+
+    // Act
+    real_description = get_description(doc, border);
+
+    // Assert
+    EXPECT_EQ(exp_description, real_description);
+}

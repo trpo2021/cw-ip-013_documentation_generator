@@ -1,10 +1,14 @@
 #include <AutoDocLib.hpp>
 
-void documentation_classes(string& buff, p2i border, string save_path);
+string documentation_classes(string& buff, p2i border, string save_path);
 
-void documentation_functions(string& buff, p2i border, string save_path);
+string documentation_functions(string& buff, p2i border, string save_path);
 
-void auto_doc(string path, string save_path)
+void auto_doc(
+        string path,
+        string save_path,
+        list<string>& class_names,
+        list<string>& func_names)
 {
     ifstream file;
     p2i border(0, 0);
@@ -30,16 +34,22 @@ void auto_doc(string path, string save_path)
         //Вызываем соответствующую функцию для документирования сущности.
         if (buff.find("class", temp_pos) == temp_pos
             || buff.find("struct", temp_pos) == temp_pos)
-            documentation_classes(buff, border, save_path);
+            class_names.push_back(
+                    documentation_classes(buff, border, save_path));
         else
-            documentation_functions(buff, border, save_path);
+            func_names.push_back(
+                    documentation_functions(buff, border, save_path));
     }
 }
 
-void documentation_classes(string& buff, p2i border, string save_path)
+// TODOНе документировать класс, если в его теле содержатся служебные
+// комментарии, которых там быть не должно. Бросать исключение и сохранять в
+//список имена таких классов выводить отчет об ошибках в лог.
+string documentation_classes(string& buff, p2i border, string save_path)
 {
     TemplateClassDoc class_doc;
     string name;
+    string name1;
     string short_desctiption;
     string description;
     int temp_pos;
@@ -49,11 +59,13 @@ void documentation_classes(string& buff, p2i border, string save_path)
     temp_pos = buff.find('\n', border.second) + 1;
     temp_pos = buff.find_first_not_of(' ', temp_pos);
 
-    //Считываем сигнатуру функции.
+    //Считываем сигнатуру класса.
     while (buff[temp_pos] != '{') {
         name += buff[temp_pos];
         temp_pos++;
     }
+
+    name1 = name;
 
     //Считываем краткое описание
     short_desctiption = get_short_description(buff, border);
@@ -75,14 +87,14 @@ void documentation_classes(string& buff, p2i border, string save_path)
 
         //Считывание имени метода.
         for (int i = temp_pos - 1; buff[i] != '\n'; i--) {
-            if (buff[i] != ' ')
-                name = buff[i] + name;
+            if (buff[i] == ' ' && buff[i + 1] == ' ')
+                continue;
+            name = buff[i] + name;
         }
 
         // Cчитывание краткого описания.
         for (int i = temp_pos + 3; buff[i] != '\n'; i++) {
-            if (buff[i] != ' ')
-                short_desctiption += buff[i];
+            short_desctiption += buff[i];
         }
 
         //Добавляем запись о методе в класс
@@ -99,14 +111,14 @@ void documentation_classes(string& buff, p2i border, string save_path)
 
         //Считывание имени поля.
         for (int i = temp_pos - 1; buff[i] != '\n'; i--) {
-            if (buff[i] != ' ')
-                name = buff[i] + name;
+            if (buff[i] == ' ' && buff[i + 1] == ' ')
+                continue;
+            name = buff[i] + name;
         }
 
         //Считывание краткого описания.
         for (int i = temp_pos + 3; buff[i] != '\n'; i++) {
-            if (buff[i] != ' ')
-                short_desctiption += buff[i];
+            short_desctiption += buff[i];
         }
 
         //Добавляем запись о поле в класс.
@@ -117,6 +129,7 @@ void documentation_classes(string& buff, p2i border, string save_path)
 
     //Сохраняем файл документации.
     class_doc.make_documentation(save_path);
+    return name1;
 }
 
 string get_short_description(string& buff, p2i border)
@@ -125,6 +138,8 @@ string get_short_description(string& buff, p2i border)
 
     //Поиск начала краткого описания.
     int short_descr_pos = buff.find("#~", border.first) + 2;
+    if (short_descr_pos == 1)
+        return "";
 
     //Считывание краткого описания.
     while (buff[short_descr_pos] != '\n' && short_descr_pos < border.second)
@@ -138,18 +153,18 @@ string get_description(string& buff, p2i border)
     string description;
 
     //Поиск начала описания.
-    int temp_pos = buff.find("#~", border.first);
-    temp_pos = buff.find('\n', temp_pos) + 1;
+    int temp_pos = border.first + 4;
 
     // Cчитывание краткого описания.
-    while (temp_pos < border.second - 2)
+    while (temp_pos < border.second - 2) {
+        if ((long unsigned int)temp_pos == buff.find("#~", border.first))
+            temp_pos = buff.find('\n', temp_pos) + 1;
         description += buff[temp_pos++];
+    }
 
     return description;
 }
 
-//Возвращает пару,позиции границ первого коментария (включая !*/),
-//идущего после left_border.
 p2i get_com_border(string& buff, int left_border)
 {
     int start_comment = buff.find("/*!", left_border);
@@ -161,19 +176,22 @@ p2i get_com_border(string& buff, int left_border)
 
 p2i get_class_border(string& buff, int first_border)
 {
-    int pos = first_border + 1;
-    int count_border = 1;
-    while (count_border != 0) {
+    int pos = first_border - 1;
+    int count_border = 0;
+    do {
+        if ((long unsigned int)pos > buff.size()) {
+            return p2i(-1, -1);
+        }
+        pos++;
         if (buff[pos] == '}')
             count_border--;
         if (buff[pos] == '{')
             count_border++;
-        pos++;
-    }
+    } while (count_border != 0);
     return p2i(first_border, pos);
 }
 
-void documentation_functions(string& buff, p2i border, string save_path)
+string documentation_functions(string& buff, p2i border, string save_path)
 {
     TemplateFuncDoc func_doc;
     string name;
@@ -186,7 +204,10 @@ void documentation_functions(string& buff, p2i border, string save_path)
     temp_pos = buff.find_first_not_of(' ', temp_pos);
 
     //Считываем сигнатуру функции.
-    while (buff[temp_pos] != ';') {
+    if (!(isalpha(buff[temp_pos]) || buff[temp_pos] == '_')) {
+        throw string("err");
+    }
+    while (buff[temp_pos] != ';' && temp_pos < (int)buff.size()) {
         name += buff[temp_pos++];
     }
 
@@ -200,6 +221,8 @@ void documentation_functions(string& buff, p2i border, string save_path)
 
     //Создаем файл документации.
     func_doc.make_documentation(save_path);
+
+    return name;
 }
 
 void write_header_file_paths(list<path>& paths, string rel_path_to_folder)
@@ -226,4 +249,63 @@ bool is_documenting(path file_path)
     file >> input;
 
     return input == "//$AutoDoc";
+}
+
+void add_index_html(
+        std::string path, list<string>& class_names, list<string>& func_names)
+{
+    ofstream fileout;
+    fileout.open(path + "/index.html");
+    fileout << R"!(<!DOCTYPE html>
+<html>
+    <head>
+        <title>Докуменация для функций</title>
+        <style type="text/css">
+            h2{
+                text-align: center;
+                font-size: 150%;
+                color: darkgoldenrod;
+                width: 100%;
+                border-style: hidden;
+                padding-bottom: 20px;
+                padding-top: 20px;
+            }
+            div {
+                border-width: 2px;
+                width: 40%;
+                margin-left: 30%;
+                border-style: solid;
+                border: solid black;
+                border-radius: 10px;
+                background-color: cornsilk;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <h2>Классы:</h2>
+            <ul>)!";
+    for (auto it = class_names.begin(); it != class_names.end(); ++it) {
+        fileout << R"!(<li><a href="Class/)!";
+        fileout << *it;
+        fileout << R"!(.html">)!";
+        fileout << *it << R"!(</a></li>)!"
+                << "\n";
+    }
+    fileout << R"!(</ul>
+            <hr />
+            <h2>Функции:</h2>
+            <ul>)!";
+    for (auto it = func_names.begin(); it != func_names.end(); ++it) {
+        fileout << R"!(<li><a href="Func/)!";
+        fileout << *it;
+        fileout << R"!(.html">)!";
+        fileout << *it << R"!(</a></li>)!"
+                << "\n";
+    }
+    fileout << R"!(</ul>
+        </div>
+    </body>
+</html>)!";
+    fileout.close();
 }
