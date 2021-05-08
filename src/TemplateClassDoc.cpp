@@ -20,8 +20,11 @@ void TemplateClassDoc::add_var_info(string name, string short_description)
 
 void TemplateClassDoc::make_documentation(string path)
 {
+    //Подготовка потокового вывода в файл
     ofstream fileout;
     fileout.open(path + "/Class/" + this->info.name + ".html");
+
+    //Вывод шаблона в файл с подставленными значениями
     fileout << R"!(<!DOCTYPE html>
 <html>
     <head>
@@ -84,21 +87,28 @@ void TemplateClassDoc::make_documentation(string path)
             << this->info.short_description <<
             R"!(</p><hr />
             <p class="field"><span class="colortext">Поля - краткое описание:</span>)!";
+
+    //Вывод информации о полях
     for (auto it = this->vars_info.begin(); it != this->vars_info.end(); ++it) {
         fileout << R"!(<br />)!" << it->name << " - " << it->short_description
                 << "\n";
     }
+
     fileout << R"!(</p>
             <hr />
             <p class="method"><span class="colortext">Методы - краткое описание:</span>)!";
+
+    //Вывод информации о методах
     for (auto it = this->methods_info.begin(); it != this->methods_info.end();
          ++it) {
         fileout << R"!(<br />)!" << it->name << " - " << it->short_description
                 << "\n";
     }
+
     fileout << R"!( </p>
         </div>
     </body>
 </html>)!";
+
     fileout.close();
 }

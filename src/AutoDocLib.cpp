@@ -23,6 +23,8 @@ void auto_doc(
     //Поиск и обработка всех служебных коментариев в файле.
     while (true) {
         //Находим границы очередного коментария.
+
+        // TODO #18 Я бы поискал ошибку тут
         border = get_com_border(buff, border.second);
         if (border.first == -1)
             break;
@@ -42,9 +44,6 @@ void auto_doc(
     }
 }
 
-// TODOНе документировать класс, если в его теле содержатся служебные
-// комментарии, которых там быть не должно. Бросать исключение и сохранять в
-//список имена таких классов выводить отчет об ошибках в лог.
 string documentation_classes(string& buff, p2i border, string save_path)
 {
     TemplateClassDoc class_doc;
@@ -254,8 +253,11 @@ bool is_documenting(path file_path)
 void add_index_html(
         std::string path, list<string>& class_names, list<string>& func_names)
 {
+    //Подготовка потока ввывода в файл
     ofstream fileout;
     fileout.open(path + "/index.html");
+
+    //Вывод шаблона с подставленными значениями
     fileout << R"!(<!DOCTYPE html>
 <html>
     <head>
@@ -285,6 +287,8 @@ void add_index_html(
         <div>
             <h2>Классы:</h2>
             <ul>)!";
+
+    //Вывод имен классов и ссылок на соответствующие страницы документации
     for (auto it = class_names.begin(); it != class_names.end(); ++it) {
         fileout << R"!(<li><a href="Class/)!";
         fileout << *it;
@@ -292,10 +296,13 @@ void add_index_html(
         fileout << *it << R"!(</a></li>)!"
                 << "\n";
     }
+
     fileout << R"!(</ul>
             <hr />
             <h2>Функции:</h2>
             <ul>)!";
+
+    //Вывод имен функций и ссылок на соответствующие страницы документации
     for (auto it = func_names.begin(); it != func_names.end(); ++it) {
         fileout << R"!(<li><a href="Func/)!";
         fileout << *it;
@@ -303,9 +310,11 @@ void add_index_html(
         fileout << *it << R"!(</a></li>)!"
                 << "\n";
     }
+
     fileout << R"!(</ul>
         </div>
     </body>
 </html>)!";
+
     fileout.close();
 }
