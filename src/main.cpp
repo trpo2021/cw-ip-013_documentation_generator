@@ -5,7 +5,8 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-    list<string> names;
+    list<string> class_names;
+    list<string> func_names;
 
     //Вычисление пути для сохраниния документации.
     path path_to_save;
@@ -31,10 +32,14 @@ int main(int argc, char* argv[])
     for (auto it = files_for_docing.begin(); it != files_for_docing.end();
          ++it) {
         if (is_documenting(*it)) {
-            auto_doc(*it, path_to_save, names);
-            cout << "file " << *it << " documenting" << endl;
+            try {
+                auto_doc(*it, path_to_save, class_names, func_names);
+                cout << "file " << *it << " documenting" << endl;
+            } catch (string a) {
+                cout << a;
+            }
         }
     }
 
-    // TODOДобавить вывод файла index.html для связки всех файлов.
+    add_index_html(path_to_save, class_names, func_names);
 }
