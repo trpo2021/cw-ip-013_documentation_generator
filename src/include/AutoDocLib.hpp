@@ -15,7 +15,11 @@ using namespace std::filesystem;
 typedef pair<int, int> p2i;
 
 //Создать документацию по коментариям в файле.
-void auto_doc(string path, string save_path);
+void auto_doc(
+        string path,
+        string save_path,
+        list<string>& class_names,
+        list<string>& func_names);
 // TODO Предусмотреть работу в случае, если служебный комментарий содержит
 // невалидный синтаксис.
 
@@ -38,3 +42,7 @@ string get_description(string& buff, p2i border);
 //Получить краткое описание из комментария с заданным диапозоном.
 string get_short_description(string& doc, p2i border);
 // TODO Предусмотреть работу в случае, если краткое описание пусто.
+
+//Добавляет файл index.html связывающий все страницы с документацией
+void add_index_html(
+        string path, list<string>& class_names, list<string>& func_names);

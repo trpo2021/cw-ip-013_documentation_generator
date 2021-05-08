@@ -1,12 +1,15 @@
 #pragma once
+
 #include <StructsForDoc.hpp>
+#include <list>
+#include <string>
 
 class TemplateFuncDoc {
 public:
     void
     set_func_info(string name, string short_desctiption, string description);
 
-    void make_documentation(string path); // TODO покрыть тестами
+    void make_documentation(string path);
 
 protected:
     InfoForDoc info;
