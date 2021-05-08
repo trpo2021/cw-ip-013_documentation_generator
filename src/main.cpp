@@ -16,13 +16,12 @@ int main(int argc, char* argv[])
     else
         return 1;
 
-    // TODO Добавить проверку на наличие /AutoDoc
-
-    //Создаем директорию
-    std::filesystem::create_directory(path_to_save.string() + "/AutoDoc");
-    std::filesystem::create_directory(path_to_save.string() + "/AutoDoc/Class");
-    std::filesystem::create_directory(path_to_save.string() + "/AutoDoc/Func");
     path_to_save = path_to_save.concat("/AutoDoc");
+    remove_all(path_to_save);
+    //Создаем директорию
+    std::filesystem::create_directory(path_to_save.string());
+    std::filesystem::create_directory(path_to_save.string() + "/Class");
+    std::filesystem::create_directory(path_to_save.string() + "/Func");
 
     // находим все заголовочные файлы
     list<path> files_for_docing;
