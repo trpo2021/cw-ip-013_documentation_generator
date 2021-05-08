@@ -2,38 +2,60 @@
 
 #include <StructsForDoc.hpp>
 
-void TemplateFuncDoc::make_documentation(
-        string path, string path_to_template) //покрыть тестами.
+void TemplateFuncDoc::make_documentation(string path) //покрыть тестами.
 {
     ofstream fout;
     ifstream fin;
     fout.open(path + "/Func/" + this->info.name + ".html");
-    fin.open(path_to_template + "/FuncName.html");
-    std::string buff;
-    std::getline(fin, buff, '\0');
-    fin.close();
-
-    for (int i = 0; i < (int)buff.size(); i++) {
-        if (buff[i] == '#') {
-            switch (buff[i + 1]) {
-            case '1':
-                fout << this->info.name;
-                break;
-            case '2':
-                fout << this->info.short_description;
-                break;
-            case '3':
-                fout << this->info.description;
-                break;
-            default:
-                throw 1;
-                break;
+    fout << R"!(<!DOCTYPE html>
+<html>
+    <head>
+        <title>Documentation function</title>
+        <style type="text/css">
+            h2{
+                text-align: center;
+                font-size: 150%;
+                color: darkgoldenrod;
+                width: 100%;
+                border-style: hidden;
+                padding-bottom: 20px;
+                padding-top: 20px;
             }
-            i++;
-            continue;
-        }
-        fout << buff[i];
-    }
+            p{
+                text-align: center;
+                font-size: large;
+                font-family: Arial, Helvetica, sans-serif;
+                border-color: black;
+                width: 100%;
+                border-style: hidden;
+            }
+            .colortext{
+                color:darkgoldenrod;
+            }
+            div {
+                border-width: 2px;
+                width: 70%;
+                margin-left: 15%;
+                border-style: solid;
+                border: solid black;
+                border-radius: 10px;
+                background-color: cornsilk;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <p class="g"><a href="../index.html">Вернуться к списку</a></p>
+            <h2>Func:<br />)!"
+         << this->info.name << "-" << this->info.short_description <<
+            R"!(</h2>
+            <hr />
+            <p><span class="colortext">Desctiption:</span><br />)!"
+         << this->info.description <<
+            R"!(</p>
+        </div>
+    </body>
+</html>)!";
     fout.close();
 }
 

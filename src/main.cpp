@@ -9,15 +9,12 @@ int main(int argc, char* argv[])
 
     //Вычисление пути для сохраниния документации.
     path path_to_save;
-    path path_to_template_folder;
 
-    if (argc == 3) {
+    if (argc == 2)
         path_to_save = argv[1];
-        path_to_template_folder = argv[2];
-    } else
+    else
         return 1;
 
-    // TODO добавить проверку path_to_template_folder на наличие шаблонов
     // TODO Добавить проверку на наличие /AutoDoc
 
     //Создаем директорию
@@ -34,7 +31,7 @@ int main(int argc, char* argv[])
     for (auto it = files_for_docing.begin(); it != files_for_docing.end();
          ++it) {
         if (is_documenting(*it)) {
-            auto_doc(*it, path_to_save, path_to_template_folder, names);
+            auto_doc(*it, path_to_save, names);
             cout << "file " << *it << " documenting" << endl;
         }
     }

@@ -18,89 +18,88 @@ void TemplateClassDoc::add_var_info(string name, string short_description)
     this->vars_info.emplace_back(name, short_description);
 }
 
-void TemplateClassDoc::make_documentation(string path, string path_to_template)
+void TemplateClassDoc::make_documentation(string path)
 {
     ofstream fileout;
     ifstream filein;
     fileout.open(path + "/Class/" + this->info.name + ".html");
-    filein.open(path_to_template + "/ClassName.html");
-
-    std::string buff;
-    std::getline(filein, buff, '\0');
-    filein.close();
-
-    int first_field = buff.find("#~");
-    int last_field = buff.find("#~", first_field + 1);
-
-    int first_method = buff.find("#*");
-    int last_method = buff.find("#*", first_method + 2);
-
-    for (int i = 0; i < first_field; i++) {
-        if (buff[i] == '#') {
-            switch (buff[i + 1]) {
-            case '1':
-                fileout << this->info.name;
-                break;
-            case '2':
-                fileout << this->info.short_description;
-                break;
-            case '3':
-                fileout << this->info.description;
-                break;
-            default:
-                // throw 1;
-                break;
+    fileout << R"!(<!DOCTYPE html>
+<html>
+    <head>
+        <title>Documentation class</title>
+        <style type="text/css">
+            h1{
+                text-align: center;
+                font-size: 150%;
+                color:darkgoldenrod;
+                width: 100%;
+                border-style: hidden;
+                padding-top: 20px;
+                padding-bottom: 20px;
             }
-            i++;
-            continue;
-        }
-        fileout << buff[i];
+            p {
+                text-align: center;
+                font-size: large;
+                font-family: Arial, Helvetica, sans-serif;
+                border-color: black;
+                width: 100%;
+                border-style: hidden;
+            }
+            p.field {
+                text-align: center;
+                font-size: large;
+                font-family: Arial, Helvetica, sans-serif;
+                color: black;
+                width: 100%;
+                border-style: hidden;
+            }
+            p.method{
+                text-align: center;
+                font-size: large;
+                color: black;
+                width: 100%;
+                border-style: hidden;
+            }
+            .colortext{
+                color: darkgoldenrod
+            }
+            div {
+                border-width: 2px;
+                width: 70%;
+                margin-left: 15%;
+                border-style: solid;
+                border: solid black;
+                border-radius: 10px;
+                background-color: cornsilk;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <p class="g"><a href="../index.html">Вернуться к списку</a></p>
+            <h1>Имя класса - краткое описание:<br />)!"
+            << this->info.name << "-" << this->info.short_description <<
+            R"!(</h1>
+            <hr />
+            <p><span class="colortext">Полное описание:</span><br />)!"
+            << this->info.short_description <<
+            R"!(</p><hr />
+            <p class="field"><span class="colortext">Поля - краткое описание:</span>)!";
+    for (auto it = this->vars_info.begin(); it != this->vars_info.end(); ++it) {
+        fileout << R"!(<br />)!" << it->name << " - " << it->short_description
+                << "\n";
     }
-
+    fileout << R"!(</p>
+            <hr />
+            <p class="method"><span class="colortext">Методы - краткое описание:</span>)!";
     for (auto it = this->methods_info.begin(); it != this->methods_info.end();
          ++it) {
-        for (int i = first_field + 2; i < last_field; i++) {
-            if (buff[i] == '#') {
-                switch (buff[i + 1]) {
-                case '4':
-                    fileout << it->name;
-                    break;
-                case '5':
-                    fileout << it->short_description;
-                    break;
-                }
-                i++;
-                continue;
-            }
-            fileout << buff[i];
-        }
+        fileout << R"!(<br />)!" << it->name << " - " << it->short_description
+                << "\n";
     }
-
-    for (int i = last_field + 2; i < first_method; i++) {
-        fileout << buff[i];
-    }
-
-    for (auto it = this->vars_info.begin(); it != this->vars_info.end(); ++it) {
-        for (int i = first_method; i < last_method; i++) {
-            if (buff[i] == '#') {
-                switch (buff[i + 1]) {
-                case '6':
-                    fileout << it->name;
-                    break;
-                case '7':
-                    fileout << it->short_description;
-                    break;
-                }
-                i++;
-                continue;
-            }
-            fileout << buff[i];
-        }
-    }
-
-    for (int i = last_method + 2; i < buff.size(); i++) {
-        fileout << buff[i];
-    }
-
+    fileout << R"!( </p>
+        </div>
+    </body>
+</html>)!";
     fileout.close();
 }
