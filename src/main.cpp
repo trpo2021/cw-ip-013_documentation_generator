@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
         return 1;
 
     /*TODO #20 Добавить проверку на существования для путя введенного
-     * пользователем.
+    пользователем.
      */
 
     path_to_save = path_to_save.concat("/AutoDoc");

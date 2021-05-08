@@ -251,7 +251,7 @@ bool is_documenting(path file_path)
 }
 
 void add_index_html(
-        std::string path, list<string>& class_names, list<string>& func_names)
+        string path, list<string>& class_names, list<string>& func_names)
 {
     //Подготовка потока ввывода в файл
     ofstream fileout;
