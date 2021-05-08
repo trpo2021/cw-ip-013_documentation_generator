@@ -4,9 +4,11 @@
 
 void TemplateFuncDoc::make_documentation(string path) //покрыть тестами.
 {
+    //Подготовка потокового вывода в файл
     ofstream fout;
-    ifstream fin;
     fout.open(path + "/Func/" + this->info.name + ".html");
+
+    //Вывод шаблона с подставленными значениями
     fout << R"!(<!DOCTYPE html>
 <html>
     <head>
@@ -46,16 +48,17 @@ void TemplateFuncDoc::make_documentation(string path) //покрыть тест�
     <body>
         <div>
             <p class="g"><a href="../index.html">Вернуться к списку</a></p>
-            <h2>Func:<br />)!"
-         << this->info.name << "-" << this->info.short_description <<
-            R"!(</h2>
+            <h2>Func:<br />)!";
+    fout << this->info.name << "-" << this->info.short_description;
+    fout << R"!(</h2>
             <hr />
-            <p><span class="colortext">Desctiption:</span><br />)!"
-         << this->info.description <<
-            R"!(</p>
+            <p><span class="colortext">Desctiption:</span><br />)!";
+    fout << this->info.description;
+    fout << R"!(</p>
         </div>
     </body>
 </html>)!";
+
     fout.close();
 }
 

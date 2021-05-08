@@ -2,44 +2,52 @@
 #include <iostream>
 
 using namespace std;
+namespace sf = std::filesystem;
 
 int main(int argc, char* argv[])
 {
     list<string> class_names;
     list<string> func_names;
+    list<path> files_for_docing;
 
     //Вычисление пути для сохраниния документации.
     path path_to_save;
 
+    /* TODO #19 Добавить вывод сообщения с помощью в консоль, в случае, если
+     * пользователь ввел некоректные параметры.*/
     if (argc == 2)
         path_to_save = argv[1];
     else
         return 1;
 
-    // TODO Добавить проверку на наличие /AutoDoc
+    /*TODO #20 Добавить проверку на существования для путя введенного
+     * пользователем.
+     */
 
-    //Создаем директорию
-    std::filesystem::create_directory(path_to_save.string() + "/AutoDoc");
-    std::filesystem::create_directory(path_to_save.string() + "/AutoDoc/Class");
-    std::filesystem::create_directory(path_to_save.string() + "/AutoDoc/Func");
     path_to_save = path_to_save.concat("/AutoDoc");
 
+    //Удаляем старую AutoDoc дирректорию, если она существовала.
+    remove_all(path_to_save);
+
+    //Создаем директорию
+    sf::create_directory(path_to_save.string());
+    sf::create_directory(path_to_save.string() + "/Class");
+    sf::create_directory(path_to_save.string() + "/Func");
+
     // находим все заголовочные файлы
-    list<path> files_for_docing;
     write_header_file_paths(files_for_docing);
 
     //Документируем все необходимые файлы.
-    for (auto it = files_for_docing.begin(); it != files_for_docing.end();
-         ++it) {
+    for (auto it = files_for_docing.begin(); it != files_for_docing.end(); ++it)
         if (is_documenting(*it)) {
             try {
                 auto_doc(*it, path_to_save, class_names, func_names);
-                cout << "file " << *it << " documenting" << endl;
-            } catch (string a) {
-                cout << a;
+                cout << "file " << *it << "is documented" << endl;
+            } catch (string error_massage) {
+                cout << error_massage;
             }
         }
-    }
 
+    //создание index.html связывающего весь сайт с документацией
     add_index_html(path_to_save, class_names, func_names);
 }
