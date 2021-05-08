@@ -20,8 +20,6 @@ void auto_doc(
         string save_path,
         list<string>& class_names,
         list<string>& func_names);
-// TODO Предусмотреть работу в случае, если служебный комментарий содержит
-// невалидный синтаксис.
 
 //Записать пути до заголовочных файлов в заданной дирректории.
 void write_header_file_paths(list<path>& paths, string rel_path_to_folder = "");
@@ -37,11 +35,9 @@ p2i get_class_border(string& buff, int first_border);
 
 //Получить описание из комментария с заданным диапозонами.
 string get_description(string& buff, p2i border);
-// TODO Предусмотреть работу в случае, если описание пусто.
 
 //Получить краткое описание из комментария с заданным диапозоном.
 string get_short_description(string& doc, p2i border);
-// TODO Предусмотреть работу в случае, если краткое описание пусто.
 
 //Добавляет файл index.html связывающий все страницы с документацией
 void add_index_html(
