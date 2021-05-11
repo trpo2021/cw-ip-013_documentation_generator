@@ -2,7 +2,7 @@
 #include <iostream>
 
 using namespace std;
-namespace sf = std::filesystem;
+using namespace filesystem;
 
 int main(int argc, char* argv[])
 {
@@ -30,9 +30,9 @@ int main(int argc, char* argv[])
     remove_all(path_to_save);
 
     //Создаем директорию
-    sf::create_directory(path_to_save.string());
-    sf::create_directory(path_to_save.string() + "/Class");
-    sf::create_directory(path_to_save.string() + "/Func");
+    create_directory(path_to_save.string());
+    create_directory(path_to_save.string() + "/Class");
+    create_directory(path_to_save.string() + "/Func");
 
     // находим все заголовочные файлы
     write_header_file_paths(files_for_docing);
