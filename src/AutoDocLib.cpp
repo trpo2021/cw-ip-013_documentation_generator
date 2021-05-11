@@ -24,7 +24,6 @@ void auto_doc(
     while (true) {
         //Находим границы очередного коментария.
 
-        // TODO #18 Я бы поискал ошибку тут
         border = get_com_border(buff, border.second);
         if (border.first == -1)
             break;
