@@ -152,11 +152,11 @@ string get_description(string& buff, p2i border)
     string description;
 
     //Поиск начала описания.
-    int temp_pos = border.first + 4;
+    long unsigned int temp_pos = border.first + 4;
 
     // Cчитывание краткого описания.
-    while (temp_pos < border.second - 2) {
-        if ((long unsigned int)temp_pos == buff.find("#~", border.first))
+    while ((int)temp_pos < border.second - 2) {
+        if (temp_pos == buff.find("#~", border.first))
             temp_pos = buff.find('\n', temp_pos) + 1;
         description += buff[temp_pos++];
     }
@@ -175,10 +175,10 @@ p2i get_com_border(string& buff, int left_border)
 
 p2i get_class_border(string& buff, int first_border)
 {
-    int pos = first_border - 1;
+    long unsigned int pos = first_border - 1;
     int count_border = 0;
     do {
-        if ((long unsigned int)pos > buff.size()) {
+        if (pos > buff.size()) {
             return p2i(-1, -1);
         }
         pos++;
@@ -196,7 +196,7 @@ string documentation_functions(string& buff, p2i border, string save_path)
     string name;
     string short_desctiption;
     string description;
-    int temp_pos;
+    long unsigned int temp_pos;
 
     //Находим позицию первого симфола сигнатуры функции.
     temp_pos = buff.find('\n', border.second) + 1;
@@ -206,7 +206,7 @@ string documentation_functions(string& buff, p2i border, string save_path)
     if (!(isalpha(buff[temp_pos]) || buff[temp_pos] == '_')) {
         throw string("err");
     }
-    while (buff[temp_pos] != ';' && temp_pos < (int)buff.size()) {
+    while (buff[temp_pos] != ';' && temp_pos < buff.size()) {
         name += buff[temp_pos++];
     }
 
