@@ -56,13 +56,15 @@ string documentation_classes(string& buff, p2i border, string save_path)
 
     //Находим позицию первого символа сигнатуры класса.
     temp_pos = buff.find('\n', border.second) + 1;
+    if (temp_pos == 0)
+
+        throw MyException("Can`t find name ");
     temp_pos = buff.find_first_not_of(' ', temp_pos);
+    if (temp_pos == -1)
+        throw MyException("Can`t find name ");
 
     //Считываем сигнатуру класса.
-    while (buff[temp_pos] != '{') {
-        name += buff[temp_pos];
-        temp_pos++;
-    }
+    name = get_name(buff, temp_pos);
 
     name1 = name;
 
@@ -189,26 +191,38 @@ p2i get_class_border(string& buff, int first_border)
     } while (count_border != 0);
     return p2i(first_border, pos);
 }
+string get_name(string& buff, int& start_pos)
+{
+    string name;
+    const string delim = "{;\n";
 
+    while (((int)delim.find(buff[start_pos]) == -1)
+           && (start_pos != (int)buff.size())) {
+        name += buff[start_pos++];
+    }
+    return name;
+}
 string documentation_functions(string& buff, p2i border, string save_path)
 {
     TemplateFuncDoc func_doc;
     string name;
     string short_desctiption;
     string description;
-    long unsigned int temp_pos;
+    int temp_pos;
 
     //Находим позицию первого симфола сигнатуры функции.
     temp_pos = buff.find('\n', border.second) + 1;
+    if (temp_pos == 0) {
+        const char* err_m = "Can`t find name";
+        throw MyException(err_m);
+    }
     temp_pos = buff.find_first_not_of(' ', temp_pos);
-
+    if (temp_pos == -1) {
+        const char* err_m = "Can`t find name";
+        throw MyException(err_m);
+    }
     //Считываем сигнатуру функции.
-    if (!(isalpha(buff[temp_pos]) || buff[temp_pos] == '_')) {
-        throw string("err");
-    }
-    while (buff[temp_pos] != ';' && temp_pos < buff.size()) {
-        name += buff[temp_pos++];
-    }
+    name = get_name(buff, temp_pos);
 
     //Считываем краткое описание
     short_desctiption = get_short_description(buff, border);
