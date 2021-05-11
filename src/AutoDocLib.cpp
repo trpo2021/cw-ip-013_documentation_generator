@@ -24,7 +24,6 @@ void auto_doc(
     while (true) {
         //Находим границы очередного коментария.
 
-        // TODO #18 Я бы поискал ошибку тут
         border = get_com_border(buff, border.second);
         if (border.first == -1)
             break;
@@ -56,13 +55,15 @@ string documentation_classes(string& buff, p2i border, string save_path)
 
     //Находим позицию первого символа сигнатуры класса.
     temp_pos = buff.find('\n', border.second) + 1;
+    if (temp_pos == 0)
+
+        throw MyException("Can`t find name ");
     temp_pos = buff.find_first_not_of(' ', temp_pos);
+    if (temp_pos == -1)
+        throw MyException("Can`t find name ");
 
     //Считываем сигнатуру класса.
-    while (buff[temp_pos] != '{') {
-        name += buff[temp_pos];
-        temp_pos++;
-    }
+    name = get_name(buff, temp_pos);
 
     name1 = name;
 
@@ -152,11 +153,11 @@ string get_description(string& buff, p2i border)
     string description;
 
     //Поиск начала описания.
-    int temp_pos = border.first + 4;
+    long unsigned int temp_pos = border.first + 4;
 
     // Cчитывание краткого описания.
-    while (temp_pos < border.second - 2) {
-        if ((long unsigned int)temp_pos == buff.find("#~", border.first))
+    while ((int)temp_pos < border.second - 2) {
+        if (temp_pos == buff.find("#~", border.first))
             temp_pos = buff.find('\n', temp_pos) + 1;
         description += buff[temp_pos++];
     }
@@ -175,10 +176,10 @@ p2i get_com_border(string& buff, int left_border)
 
 p2i get_class_border(string& buff, int first_border)
 {
-    int pos = first_border - 1;
+    long unsigned int pos = first_border - 1;
     int count_border = 0;
     do {
-        if ((long unsigned int)pos > buff.size()) {
+        if (pos > buff.size()) {
             return p2i(-1, -1);
         }
         pos++;
@@ -189,7 +190,17 @@ p2i get_class_border(string& buff, int first_border)
     } while (count_border != 0);
     return p2i(first_border, pos);
 }
+string get_name(string& buff, int& start_pos)
+{
+    string name;
+    const string delim = "{;\n";
 
+    while (((int)delim.find(buff[start_pos]) == -1)
+           && (start_pos != (int)buff.size())) {
+        name += buff[start_pos++];
+    }
+    return name;
+}
 string documentation_functions(string& buff, p2i border, string save_path)
 {
     TemplateFuncDoc func_doc;
@@ -200,15 +211,17 @@ string documentation_functions(string& buff, p2i border, string save_path)
 
     //Находим позицию первого симфола сигнатуры функции.
     temp_pos = buff.find('\n', border.second) + 1;
+    if (temp_pos == 0) {
+        const char* err_m = "Can`t find name";
+        throw MyException(err_m);
+    }
     temp_pos = buff.find_first_not_of(' ', temp_pos);
-
+    if (temp_pos == -1) {
+        const char* err_m = "Can`t find name";
+        throw MyException(err_m);
+    }
     //Считываем сигнатуру функции.
-    if (!(isalpha(buff[temp_pos]) || buff[temp_pos] == '_')) {
-        throw string("err");
-    }
-    while (buff[temp_pos] != ';' && temp_pos < (int)buff.size()) {
-        name += buff[temp_pos++];
-    }
+    name = get_name(buff, temp_pos);
 
     //Считываем краткое описание
     short_desctiption = get_short_description(buff, border);
@@ -251,7 +264,7 @@ bool is_documenting(path file_path)
 }
 
 void add_index_html(
-        std::string path, list<string>& class_names, list<string>& func_names)
+        string path, list<string>& class_names, list<string>& func_names)
 {
     //Подготовка потока ввывода в файл
     ofstream fileout;

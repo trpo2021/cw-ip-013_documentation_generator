@@ -157,3 +157,24 @@ TEST(AutoDocLib, get_description)
     // Assert
     EXPECT_EQ(exp_description, real_description);
 }
+TEST(AutoDocLib, get_name)
+{
+    // Arrange
+    p2i border(0, 31);
+    ifstream file;
+    string doc;
+    string exp_description = "char mkfg(int g)";
+    string real_description;
+    file.open("./test/example_folder/get_name/G.h");
+    ASSERT_TRUE(file.is_open());
+    getline(file, doc, '\0');
+    file.close();
+    int start_pos = 8;
+    const int end_pos = 24;
+    // Act
+    real_description = get_name(doc, start_pos);
+
+    // Assert
+    EXPECT_EQ(exp_description, real_description);
+    EXPECT_EQ(end_pos, start_pos);
+}
