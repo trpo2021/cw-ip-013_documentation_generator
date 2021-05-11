@@ -13,6 +13,6 @@ public:
     //Генерирует html страницу по данным объекта
     void make_documentation(string path);
 
-protected:
+private:
     InfoForDoc info;
 };

@@ -17,7 +17,7 @@ public:
     //Генерирует html страницу по данным объекта
     void make_documentation(string path);
 
-protected:
+private:
     InfoForDoc info;
     list<MemberInfo> methods_info;
     list<MemberInfo> vars_info;
