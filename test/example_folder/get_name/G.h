@@ -1,0 +1,3 @@
+/*!
+!*/
+char mkfg(int g);
