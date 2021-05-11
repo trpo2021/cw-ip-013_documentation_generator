@@ -2,7 +2,9 @@
 #include <iostream>
 
 using namespace std;
-namespace sf = std::filesystem;
+using namespace filesystem;
+
+void syntax_help();
 
 int main(int argc, char* argv[])
 {
@@ -13,26 +15,34 @@ int main(int argc, char* argv[])
     //Вычисление пути для сохраниния документации.
     path path_to_save;
 
-    /* TODO #19 Добавить вывод сообщения с помощью в консоль, в случае, если
-     * пользователь ввел некоректные параметры.*/
+    for (int i = 0; i < argc; i++) {
+        if (argv[i][0] == '-')
+            if (argv[i][1] == 'h') {
+                syntax_help();
+                return 0;
+            }
+    }
+
     if (argc == 2)
         path_to_save = argv[1];
     else
         return 1;
 
-    /*TODO #20 Добавить проверку на существования для путя введенного
-     * пользователем.
-     */
-
-    path_to_save = path_to_save.concat("/AutoDoc");
+    path_to_save = path_to_save / "AutoDoc";
 
     //Удаляем старую AutoDoc дирректорию, если она существовала.
     remove_all(path_to_save);
 
     //Создаем директорию
-    sf::create_directory(path_to_save.string());
-    sf::create_directory(path_to_save.string() + "/Class");
-    sf::create_directory(path_to_save.string() + "/Func");
+    try {
+        create_directory(path_to_save);
+        create_directory(path_to_save / "Class");
+        create_directory(path_to_save / "Func");
+    } catch (exception& err) {
+        cout << err.what() << endl;
+        cout << argv[0] << " path_to_save";
+        return 2;
+    }
 
     // находим все заголовочные файлы
     write_header_file_paths(files_for_docing);
@@ -43,11 +53,48 @@ int main(int argc, char* argv[])
             try {
                 auto_doc(*it, path_to_save, class_names, func_names);
                 cout << "file " << *it << "is documented" << endl;
-            } catch (string error_massage) {
-                cout << error_massage;
+            } catch (MyException& excep) {
+                cout << excep.what() << endl;
+                syntax_help();
+                return 1;
             }
         }
 
     //создание index.html связывающего весь сайт с документацией
     add_index_html(path_to_save, class_names, func_names);
+}
+
+void syntax_help()
+{
+    cout << R"!(
+The first line of the header file must contain a comment: //#AutoDoc
+
+All service comments for classes and functions should be placed above them,
+without empty lines, otherwise the program may not work correctly:
+
+    /*!
+    
+    #~ short description
+    
+    description
+    ...
+    
+    */
+    class/func{}()
+
+* /*!...!*/ - Service Comment boundaries.
+
+* #~ - The short description designation, the entire contents of the line are placed
+       in the "Short Description" section of the documentation page.
+
+* All remaining text contained in /*!...!*/ is placed in the section " Detailed description”
+
+For class members:
+
+* /// - The next line is placed in the documentation after the field signature in the same
+        line.(only for fields)
+
+* //# - The next line is placed in the documentation after the signature of the class methods
+        in the same line.(only a brief description of the method)
+)!";
 }

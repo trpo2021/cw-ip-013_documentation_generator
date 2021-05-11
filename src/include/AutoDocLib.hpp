@@ -9,6 +9,19 @@
 #include <iostream>
 #include <list>
 
+class MyException : public exception {
+private:
+    const char* m_error;
+
+public:
+    MyException(const char* m_error) : m_error(m_error){};
+
+    const char* what() const noexcept override
+    {
+        return m_error;
+    };
+};
+
 using namespace std;
 using namespace std::filesystem;
 
@@ -38,6 +51,9 @@ string get_description(string& buff, p2i border);
 
 //Получить краткое описание из комментария с заданным диапозоном.
 string get_short_description(string& doc, p2i border);
+
+//Получить имя сущности.
+string get_name(string& buff, int& start_pos);
 
 //Добавляет файл index.html связывающий все страницы с документацией
 void add_index_html(
