@@ -24,15 +24,15 @@ int main(int argc, char* argv[])
     пользователем.
      */
 
-    path_to_save = path_to_save.concat("/AutoDoc");
+    path_to_save = path_to_save / "AutoDoc";
 
     //Удаляем старую AutoDoc дирректорию, если она существовала.
     remove_all(path_to_save);
 
     //Создаем директорию
-    create_directory(path_to_save.string());
-    create_directory(path_to_save.string() + "/Class");
-    create_directory(path_to_save.string() + "/Func");
+    create_directory(path_to_save);
+    create_directory(path_to_save / "Class");
+    create_directory(path_to_save / "Func");
 
     // находим все заголовочные файлы
     write_header_file_paths(files_for_docing);
