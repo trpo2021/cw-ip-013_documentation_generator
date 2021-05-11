@@ -30,9 +30,14 @@ int main(int argc, char* argv[])
     remove_all(path_to_save);
 
     //Создаем директорию
-    create_directory(path_to_save);
-    create_directory(path_to_save / "Class");
-    create_directory(path_to_save / "Func");
+    try {
+        create_directory(path_to_save);
+        create_directory(path_to_save / "Class");
+        create_directory(path_to_save / "Func");
+    } catch (exception& err) {
+        cout << err.what() << endl;
+        return 2;
+    }
 
     // находим все заголовочные файлы
     write_header_file_paths(files_for_docing);
