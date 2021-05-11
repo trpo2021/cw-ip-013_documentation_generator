@@ -256,7 +256,7 @@ bool is_documenting(path file_path)
     string input;
     ifstream file(file_path);
     if (!file.is_open())
-        return 0;
+        throw MyException("can't open file");
 
     file >> input;
 

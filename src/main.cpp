@@ -25,9 +25,10 @@ int main(int argc, char* argv[])
 
     if (argc == 2)
         path_to_save = argv[1];
-    else
+    else {
+        cout << argv[0] << " path_to_save" << endl;
         return 1;
-
+    }
     path_to_save = path_to_save / "AutoDoc";
 
     //Удаляем старую AutoDoc дирректорию, если она существовала.
@@ -40,7 +41,7 @@ int main(int argc, char* argv[])
         create_directory(path_to_save / "Func");
     } catch (exception& err) {
         cout << err.what() << endl;
-        cout << argv[0] << " path_to_save";
+        cout << argv[0] << " path_to_save" << endl;
         return 2;
     }
 
@@ -48,18 +49,23 @@ int main(int argc, char* argv[])
     write_header_file_paths(files_for_docing);
 
     //Документируем все необходимые файлы.
-    for (auto it = files_for_docing.begin(); it != files_for_docing.end(); ++it)
-        if (is_documenting(*it)) {
-            try {
-                auto_doc(*it, path_to_save, class_names, func_names);
-                cout << "file " << *it << "is documented" << endl;
-            } catch (MyException& excep) {
-                cout << excep.what() << endl;
-                syntax_help();
-                return 1;
+    try {
+        for (auto it = files_for_docing.begin(); it != files_for_docing.end();
+             ++it)
+            if (is_documenting(*it)) {
+                try {
+                    auto_doc(*it, path_to_save, class_names, func_names);
+                    cout << "file " << *it << "is documented" << endl;
+                } catch (MyException& excep) {
+                    cout << excep.what() << endl;
+                    syntax_help();
+                    return 1;
+                }
             }
-        }
-
+    } catch (MyException& err) {
+        cout << err.what() << endl;
+        return 3;
+    }
     //создание index.html связывающего весь сайт с документацией
     add_index_html(path_to_save, class_names, func_names);
 }
