@@ -43,8 +43,9 @@ int main(int argc, char* argv[])
             try {
                 auto_doc(*it, path_to_save, class_names, func_names);
                 cout << "file " << *it << "is documented" << endl;
-            } catch (string error_massage) {
-                cout << error_massage;
+            } catch (MyException& excep) {
+                cout << excep.what() << endl;
+                return 1;
             }
         }
 
