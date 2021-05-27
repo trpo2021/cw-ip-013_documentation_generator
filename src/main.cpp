@@ -73,21 +73,18 @@ int main(int argc, char* argv[])
 void syntax_help()
 {
     cout << R"!(
-The first line of the header file must contain a comment: //#AutoDoc
+The first line of the header file must contain a comment: //$AutoDoc
 
 All service comments for classes and functions should be placed above them,
 without empty lines, otherwise the program may not work correctly:
 
     /*!
-    
     #~ short description
-    
     description
     ...
-    
-    */
+    !*/
     class/func{}()
-
+    
 * /*!...!*/ - Service Comment boundaries.
 
 * #~ - The short description designation, the entire contents of the line are placed
