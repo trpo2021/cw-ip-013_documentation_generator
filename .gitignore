@@ -1,0 +1,9 @@
+*.d
+*.o
+*.a
+*.out
+*.exe
+build/
+.vscode
+AutoDoc
+
